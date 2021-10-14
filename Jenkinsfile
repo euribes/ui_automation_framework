@@ -1,46 +1,5 @@
 #!/usr/bin/env groovy
-deploymentStages = [:]
-map = [:]
-label = "jenkins-agent-${UUID.randomUUID()}"
-slackChannel = "ui-automation"
-
-/*
- * This function reads the list of features and sends
-   that list to funciton "assignFeatureToMachine"
- */
-def getFeaturesGroupsToRun() {
-    def numMachines = "${CONTAINERS}".toInteger()
-    def list = sh(script: "find cypress/integration/ -name '*.js' -print0 | xargs -0 | tr  ' ' ,", returnStdout: true)
-    def map = assignFeatureToMachine(numMachines, list)
-
-    print 'Number of containers: ' + numMachines
-    map.each { key, value -> 
-        print 'Size: ' + value.size() + ' '   + key + ' ' + value
-    }
-    return map
-}
-
-/*
- * This function gets the list of features and assign each one
-   to a machine to be executed
- */
-def assignFeatureToMachine(numMachines, list) {
-    def map = [:]
-    def round = 0
-    def nameAndValue = list.split(',')
-    print 'Number of feature files ' + nameAndValue.size()
-
-    nameAndValue.eachWithIndex { val, idx ->
-        round = (idx / numMachines).toInteger()
-        if (idx < numMachines) {
-            map['machine' + idx] = []
-            map['machine' + idx].add(val)
-        } else {
-            map['machine' + (idx-(numMachines*round))].add(val)
-        }
-    }
-    return map.toSorted()
-}
+slackChannel = "automation"
 
 pipeline {
     agent {
@@ -62,30 +21,24 @@ pipeline {
         stage('Cypress execution') {
             steps {
                 script {
-                    def map = getFeaturesGroupsToRun()
-                    map.each{
-                        key, value -> deploymentStages["${key}"] = {
-                            stage("Stage ${key}") {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    def featureList = map[key].join(",")
-                                    credentials = readFile(file: "${CREDENTIALS}")
-                                    lines = credentials.readLines()
-                                    def USERNAME = lines[0]
-                                    def PASSWORD = lines[1]
-                                    wrap([$class: "MaskPasswordsBuildWrapper",
-                                        varPasswordPairs: [
-                                            [password: USERNAME],
-                                            [password: PASSWORD],
-                                        ]]) {
-                                        timeout(time: 260) {
-                                            sh "XDG_CONFIG_HOME=/tmp/cyhome-${key} npx cypress run -e '${USERNAME},${PASSWORD} --browser ${BROWSER} --config video=${VIDEO},numTestsKeptInMemory=0,videoCompression=51 --spec ${featureList}"
-                                        }
-                                    }
+                    stage("Cypress Run") {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            def featureList = map[key].join(",")
+                            credentials = readFile(file: "${CREDENTIALS}")
+                            lines = credentials.readLines()
+                            def USERNAME = lines[0]
+                            def PASSWORD = lines[1]
+                            wrap([$class: "MaskPasswordsBuildWrapper",
+                                varPasswordPairs: [
+                                    [password: USERNAME],
+                                    [password: PASSWORD],
+                                ]]) {
+                                timeout(time: 260) {
+                                    sh "npx cypress run -e '${USERNAME},${PASSWORD} --browser ${BROWSER} --config video=${VIDEO},numTestsKeptInMemory=0,videoCompression=51"
                                 }
                             }
                         }
                     }
-                    parallel deploymentStages
                 }
             }
         }
@@ -100,65 +53,6 @@ pipeline {
                 sh "mkdir /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation"
                 sh "mv /tmp/allure-2.13.9 /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation/Allure"
                 allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
-            }
-        }
-        stage('Update Metrics') {
-            when {
-                expression { params.UPDATE_METRICS == true }
-            }
-            steps {
-                script {
-                    credentials = readFile(file: "${CREDENTIALS}")
-                    lines = credentials.readLines()
-                    def ACCESS_TOKEN = lines[4]
-                    def CLIENT_ID = lines[6]
-                    def CLIENT_SECRET = lines[7]
-                    wrap([$class: "MaskPasswordsBuildWrapper",
-                    varPasswordPairs: [
-                        [password: ACCESS_TOKEN],
-                        [password: CLIENT_ID],
-                        [password: CLIENT_SECRET]
-                    ]
-                    ]) {
-                        output = sh returnStdout: true, script: """
-                        node metrics/metrics.js ${env.BUILD_NUMBER} ${TAG} ${BROWSER} ${env.BASEURL} ${CLIENT_ID} ${CLIENT_SECRET} ${ACCESS_TOKEN}
-                        """
-                        if (env.SLACK == 'true') {
-                            slackSend (
-                                baseUrl: "https://euribe.slack.com/services/hooks/jenkins-ci/",
-                                tokenCredentialId: 'slack',
-                                botUser: true,
-                                channel: slackChannel, 
-                                failOnError: true,
-                                message: "${output}"
-                            )
-                        }
-                    }
-                }
-            }
-        }
-        stage('Update testlink') {
-            when {
-                expression { params.UPDATE_TESTLINK == true }
-            }
-            steps {
-                script {
-                    credentials = readFile(file: "${CREDENTIALS}")
-                    lines = credentials.readLines()
-                    def TESTLINK_HOST = lines[5].split("=")[1]
-                    def TESTLINK_KEY = lines[6].split("=")[1]
-                    wrap([$class: "MaskPasswordsBuildWrapper",
-                    varPasswordPairs: [
-                        [password: TESTLINK_HOST],
-                        [password: TESTLINK_KEY]
-                    ]
-                    ]) {
-                        output = sh returnStdout: true,
-                        script: """
-                        node metrics/testlink.js ${env.TESTLINK_RUN_ID} ${TESTLINK_HOST} ${TESTLINK_KEY}
-                        """
-                    }
-                }
             }
         }
     }
