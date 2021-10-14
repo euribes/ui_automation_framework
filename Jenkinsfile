@@ -43,7 +43,7 @@ pipeline {
             steps {
                 // sh "rm -rf allure-commandline-*"
                 // sh "rm -rf allure-2.13.9"
-                // sh "apt install default-jre allure -y"
+                sh "apt install default-jre allure -y"
                 // sh "wget -P /tmp/ https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.13.9/allure-commandline-2.13.9.tgz"
                 // sh "cd /tmp/ && tar zxvf allure-commandline-2.13.9.tgz"
                 // sh "mkdir /var/lib/jenkins/tools"
