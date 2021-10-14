@@ -39,19 +39,19 @@ pipeline {
                 }
             }
         }
-        // stage('Reporting') {
-        //     steps {
-        //         sh "rm -rf allure-commandline-*"
-        //         sh "rm -rf allure-2.13.9"
-        //         sh "apt install default-jre allure -y"
-        //         sh "wget -P /tmp/ https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.13.9/allure-commandline-2.13.9.tgz"
-        //         sh "cd /tmp/ && tar zxvf allure-commandline-2.13.9.tgz"
-        //         sh "mkdir /var/lib/jenkins/tools"
-        //         sh "mkdir /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation"
-        //         sh "mv /tmp/allure-2.13.9 /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation/Allure"
-        //         allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
-        //     }
-        // }
+        stage('Reporting') {
+            steps {
+                // sh "rm -rf allure-commandline-*"
+                // sh "rm -rf allure-2.13.9"
+                // sh "apt install default-jre allure -y"
+                // sh "wget -P /tmp/ https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.13.9/allure-commandline-2.13.9.tgz"
+                // sh "cd /tmp/ && tar zxvf allure-commandline-2.13.9.tgz"
+                // sh "mkdir /var/lib/jenkins/tools"
+                // sh "mkdir /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation"
+                // sh "mv /tmp/allure-2.13.9 /var/lib/jenkins/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation/Allure"
+                allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+            }
+        }
     }
     post {
         always {
