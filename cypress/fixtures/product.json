@@ -1,0 +1,7 @@
+{
+  "name": "ProductTestName",
+  "regular_price": "99.9",
+  "description": "This is a description",
+  "short_description": "This is a short description",
+  "type": "simple"
+}

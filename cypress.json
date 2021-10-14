@@ -1,0 +1,27 @@
+{
+  "baseUrl": "http://localhost:8000",
+  "woocommerceAPI": "/wp-json/wc/v3/products/",
+  "wordpressAPI": "/wp-json/wp/v2/",
+  "graphqlAPI": "/graphql",
+  "ignoreTestFiles": ["*.old"],
+  "reporter": "spec",
+  "reporterOptions": {
+    "mochaFile": "./allure-results/cypress-report-[hash].xml",
+    "attachments": true,
+    "toConsole": true,
+    "overwrite": true,
+    "json": true,
+    "html": false,
+    "videos": true,
+    "videoCompression": false,
+    "screenshots": true
+  },
+  "requestTimeout": 10000,
+  "watchForFileChanges": true,
+  "testFiles": ["**/**.js"],
+  "video": true,
+  "videoUploadOnPasses": false,
+  "screenshotOnRunFailure": true,
+  "trashAssetsBeforeRuns": true,
+  "retries": { "runMode": 1 }
+}
