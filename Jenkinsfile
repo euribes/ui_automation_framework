@@ -5,7 +5,7 @@ pipeline {
     agent {
         docker {
             image "cypress/included:8.6.0"
-            args "--entrypoint='' -u 0:0"
+            args "--net=host --entrypoint='' -u 0:0"
         }
     }
     environment {
