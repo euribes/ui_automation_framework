@@ -49,6 +49,9 @@ pipeline {
             args "--entrypoint='' -u 0:0"
         }
     }
+    environment {
+        CREDENTIALS = credentials('creds.txt')
+    }
     stages{
         stage('Set up environment') {
             steps {
@@ -67,24 +70,12 @@ pipeline {
                                     def featureList = map[key].join(",")
                                     credentials = readFile(file: "${CREDENTIALS}")
                                     lines = credentials.readLines()
-                                    def AUTOMATION_USER = lines[0]
+                                    def USERNAME = lines[0]
                                     def PASSWORD = lines[1]
-                                    def PASSPHRASE = lines[2]
-                                    def API_URL = lines[3]
-                                    def ACCESS_TOKEN = lines[4]
-                                    def REFRESH_TOKEN = lines[5]
-                                    def CLIENT_ID = lines[6]
-                                    def CLIENT_SECRET = lines[7]
                                     wrap([$class: "MaskPasswordsBuildWrapper",
                                         varPasswordPairs: [
-                                            [password: AUTOMATION_USER],
+                                            [password: USERNAME],
                                             [password: PASSWORD],
-                                            [password: PASSPHRASE],
-                                            [password: API_URL],
-                                            [password: ACCESS_TOKEN],
-                                            [password: REFRESH_TOKEN],
-                                            [password: CLIENT_ID],
-                                            [password: CLIENT_SECRET]
                                         ]]) {
                                         timeout(time: 260) {
                                             sh "XDG_CONFIG_HOME=/tmp/cyhome-${key} npx cypress run -e '${USERNAME},${PASSWORD} --browser ${BROWSER} --config video=${VIDEO},numTestsKeptInMemory=0,videoCompression=51 --spec ${featureList}"
