@@ -32,7 +32,7 @@ pipeline {
                                 [password: PASSWORD],
                             ]]) {
                             timeout(time: 100) {
-                                sh "npx cypress run -e '${USERNAME},${PASSWORD} --browser ${BROWSER} --config video=${VIDEO}"
+                                sh "npx cypress run -e '${USERNAME},${PASSWORD}' --browser ${BROWSER} --config video=${VIDEO}"
                             }
                         }
                     }
