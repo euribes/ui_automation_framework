@@ -1,0 +1,40 @@
+{
+    "plugins": ["cypress", "chai-friendly"],
+    "extends": "eslint:recommended",
+    "rules": {
+      "cypress/no-assigning-return-values": "error",
+      "cypress/no-unnecessary-waiting": "warn",
+      "cypress/assertion-before-screenshot": "warn",
+      "cypress/no-force": "off",
+      "chai-friendly/no-unused-expressions": 2,
+      "semi": ["error", "never"],
+      "eqeqeq": ["error", "always"],
+      "curly": "warn",
+      "no-multi-spaces": "error",
+      "no-multi-str": "error",
+      "vars-on-top": "error",
+      "camelcase": "error",
+      "comma-spacing": ["error", { "before": false, "after": true }],
+      "keyword-spacing": ["error", { "before": true }],
+      "object-curly-newline": ["error", { "consistent": true }],
+      "no-debugger": "error",
+      "no-return-assign": "error",
+      "no-self-compare": "error",
+      "no-undef-init": "error",
+      "array-bracket-newline": ["error", "consistent"],
+      "block-spacing": "error",
+      "brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
+      "capitalized-comments": ["error"],
+      "eol-last": ["error", "always"],
+      "line-comment-position": ["error", { "position": "above" }],
+      "lines-around-comment": ["error", { "beforeBlockComment": true }],
+      "max-len": ["error", { "code": 120 }],
+      "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+      "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+      "no-var": "error"
+    },
+    "env": {
+      "cypress/globals": true
+    }
+  }
+  

@@ -1,0 +1,16 @@
+{
+    "editor.quickSuggestions": {
+      "comments": false,
+      "strings": true,
+      "other": true
+    },
+    "editor.formatOnPaste": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "eslint.alwaysShowStatus": true,
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "json.format.enable": false
+  }
+  
