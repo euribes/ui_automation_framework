@@ -23,7 +23,6 @@ pipeline {
                 script {
                     stage("Cypress Run") {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            def featureList = map[key].join(",")
                             credentials = readFile(file: "${CREDENTIALS}")
                             lines = credentials.readLines()
                             def USERNAME = lines[0]
