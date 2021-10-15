@@ -54,6 +54,7 @@ pipeline {
                 sh "apt install default-jre allure -y"
                 sh './node_modules/.bin/allure generate ./allure-results --clean'
                 sh 'chmod -R 777 *'
+                archiveArtifacts artifacts: 'allure-report/*'
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
                 }
