@@ -42,8 +42,7 @@ pipeline {
         stage('Reporting') {
             steps {
                 sh "apt install default-jre allure -y"
-                sh './node_modules/.bin/allure generate ./allure-results'
-                //allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+                sh './node_modules/.bin/allure generate ./allure-results --clean'
             }
         }
     }
@@ -52,10 +51,9 @@ pipeline {
             script {
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
-                } else {
-                    archiveArtifacts artifacts: 'allure-report'
                 }
                 sh 'chmod -R 777 *'
+                archiveArtifacts artifacts: 'allure-report/*'
             }
         }
         failure {
