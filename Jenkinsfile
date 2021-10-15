@@ -41,19 +41,29 @@ pipeline {
         }
         stage('Reporting') {
             steps {
+                script {
+                    stash name: 'allure-results', includes: 'allure-results/*'
+                }
                 //sh "apt install default-jre allure -y"
                 //sh './node_modules/.bin/allure generate ./allure-results --clean'
-                allure results: [[path: 'allure-results']]
             }
         }
     }
     post {
         always {
             script {
+                unstash 'allure-results' //extract results
+                sh 'chmod -R 777 *'
+                allure([
+                includeProperties: false,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'allure-results']]
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
                 }
-                sh 'chmod -R 777 *'
+            ])
                 archiveArtifacts artifacts: 'allure-report/*'
             }
         }
