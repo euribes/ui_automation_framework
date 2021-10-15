@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://ec2-100-25-33-224.compute-1.amazonaws.com:8000",
+  "baseUrl": "http://100.25.33.224:8000",
   "woocommerceAPI": "/wp-json/wc/v3/products/",
   "wordpressAPI": "/wp-json/wp/v2/",
   "graphqlAPI": "/graphql",
