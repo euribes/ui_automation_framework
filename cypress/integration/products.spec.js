@@ -24,6 +24,6 @@ describe('Product tests', () => {
   })
 
   it('should see product short description displayed', () => {
-    cy.visit()
+    cy.visit('')
   })
 })
