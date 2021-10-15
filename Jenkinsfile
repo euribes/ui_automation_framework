@@ -44,9 +44,6 @@ pipeline {
                 script {
                     stash name: 'allure-results', includes: 'allure-results/*'
                 }
-                //sh "apt install default-jre allure -y"
-                //sh './node_modules/.bin/allure generate ./allure-results --clean'
-                
             }
         }
     }
@@ -54,8 +51,9 @@ pipeline {
         always {
             unstash 'allure-results' //extract results
             script {
+                sh "apt install default-jre allure -y"
+                sh './node_modules/.bin/allure generate ./allure-results --clean'
                 sh 'chmod -R 777 *'
-                allure results: [[path: 'allure-results']]
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
                 }
