@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://100.25.33.224:8000",
+  "baseUrl": "https://www.google.com",
   "woocommerceAPI": "/wp-json/wc/v3/products/",
   "wordpressAPI": "/wp-json/wp/v2/",
   "graphqlAPI": "/graphql",
