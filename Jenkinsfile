@@ -46,20 +46,16 @@ pipeline {
                 }
                 //sh "apt install default-jre allure -y"
                 //sh './node_modules/.bin/allure generate ./allure-results --clean'
+                
             }
         }
     }
     post {
         always {
             script {
-                unstash 'allure-results' //extract results
                 sh 'chmod -R 777 *'
-                allure([
-                includeProperties: false,
-                jdk: '',
-                properties: [],
-                reportBuildPolicy: 'ALWAYS',
-                results: [[path: 'allure-results']]
+                unstash 'allure-results' //extract results
+                allure results: [[path: 'allure-results']]
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
                 }
