@@ -52,15 +52,13 @@ pipeline {
     }
     post {
         always {
+            unstash 'allure-results' //extract results
             script {
                 sh 'chmod -R 777 *'
-                unstash 'allure-results' //extract results
                 allure results: [[path: 'allure-results']]
                 if (env.VIDEO == 'true') {
                     archiveArtifacts artifacts: 'cypress/videos/*.mp4'
                 }
-            ])
-                archiveArtifacts artifacts: 'allure-report/*'
             }
         }
         failure {
