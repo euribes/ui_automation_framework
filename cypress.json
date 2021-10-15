@@ -23,5 +23,5 @@
   "videoUploadOnPasses": false,
   "screenshotOnRunFailure": true,
   "trashAssetsBeforeRuns": true,
-  "retries": { "runMode": 1 }
+  "retries": { "runMode": 2 }
 }
