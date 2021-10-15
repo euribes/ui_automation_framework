@@ -41,8 +41,9 @@ pipeline {
         }
         stage('Reporting') {
             steps {
-                sh "apt install default-jre allure -y"
-                sh './node_modules/.bin/allure generate ./allure-results --clean'
+                //sh "apt install default-jre allure -y"
+                //sh './node_modules/.bin/allure generate ./allure-results --clean'
+                allure results: [[path: 'allure-results']]
             }
         }
     }
